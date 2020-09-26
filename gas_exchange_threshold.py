@@ -39,7 +39,7 @@ Python code to determine the Gas Exchange Threshold (GET) from an cardiopulmonar
 Preparing the data, Please make sure that:
 1. Time is on column 1 and is expressed in multiples of 10 and not as 0:10, 0:20, and so on...
 2. vo2 data is on column 2 and vco2 data is on column 3 in the approapriate excel file.
-Eg: If your sheet is named as Iron Man, please type 'Iron Man' instead of 'Sheet4'
+Eg: If your sheet is named as Iron Man, please type 'Iron Man' instead of 'Sheet1'
 
 
 """
@@ -51,6 +51,12 @@ import glob
 import numpy as np
 from tabulate import tabulate
 import matplotlib.pyplot as plt
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+import tempfile
 
 class GET(object):
     # window of data around threshold
@@ -113,8 +119,7 @@ class GET(object):
         self.timestamp = time[diff_ind]
         
         # Determining the length of vo2 array
-        self.vo2_len = len(vo2)
-        k = self.vo2_len
+        k = len(vo2)
               
         # Creating two arrays: 1) all points before (X,Y) and 2) all points after (X,Y)
         vo2n1, vco2n1, vo2n2, vco2n2 = np.zeros(k), np.zeros(k), np.zeros(k), np.zeros(k)
@@ -172,27 +177,73 @@ class GET(object):
         for i in range(q):
             y4[i] = Yplt_4(self.vo2nw2[i])
             
-        # Plotting two figures
-        plt.figure()
+        # Plotting two figures and saving them as jpeg files
+        
+        # Scatter plot
         plt.title("VCO2 v VO2")
         plt.xlabel("VO2")
         plt.ylabel("VCO2")
-        plt.plot(self.vo2, self.vco2, '*')
-        plt.show(block=False)
+        plt.plot(self.vo2, self.vco2, '.')
+        plt.savefig(os.path.join(tempfile.gettempdir(), "scatter.jpg"))
         
-        plt.figure()
+        # Plotting teh linear and the quadratic curves
         plt.title("VCO2 v VO2")
         plt.xlabel("VO2")
         plt.ylabel("VCO2")
-        plt.plot(x1, y1, x1, y2, self.vo2, self.vco2, '*')
-        plt.show(block=False)
+        plt.plot(x1, y1, x1, y2, self.vo2, self.vco2, '.')
+        plt.savefig(os.path.join(tempfile.gettempdir(), "lin_quad.jpg"))
         
+        # Plotting the upper and the lower regressions
         plt.figure()
         plt.title("VCO2 v VO2 Split graph")
         plt.xlabel("VO2")
         plt.ylabel("VCO2")
-        plt.plot(self.vo2nw1, y3, self.vo2nw2, y4, self.vo2, self.vco2, '*')
-        plt.show()
+        plt.plot(self.vo2nw1, y3, self.vo2nw2, y4, self.vo2, self.vco2, '.')
+        plt.savefig(os.path.join(tempfile.gettempdir(), "lwr_upr_reg.jpg"))
+
+    def sendmail(self):
+        smtp_server = "smtp.gmail.com"
+        stmp_port = 465
+        from_addr = "pret.email2020@gmail.com"
+        to_addr = input("Please enter your email address to send the GET plots: ")
+        subject = "VCO2 vs VO2 plots"
+        mail_body = "Please find the plots attached."
+        attch_1 = os.path.join(tempfile.gettempdir(), "scatter.jpg")
+        attch_2 = os.path.join(tempfile.gettempdir(), "lin_quad.jpg")
+        attch_3 = os.path.join(tempfile.gettempdir(), "lwr_upr_reg.jpg")
+
+        msg = MIMEMultipart()
+        msg['Subject'] = subject
+        msg['To'] = to_addr
+        msg.attach(MIMEText(mail_body))
+
+        files = []
+        files.append(attch_1)
+        files.append(attch_2)
+        files.append(attch_3)
+
+        for file in files:
+            part = MIMEBase('application', "octet-stream")
+            part.set_payload(open(file,"rb").read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition','attachment; filename="{0}"'.format(os.path.basename(file)))
+            msg.attach(part)
+    
+        try:
+            server = smtplib.SMTP_SSL(smtp_server, stmp_port)
+            server.login("pret.email2020", "Pass12342020")
+            server.sendmail(from_addr, to_addr, msg.as_string())
+            server.quit()
+            text = "The email was sent! Please check your inbox."
+            os.unlink(os.path.join(tempfile.gettempdir(), "scatter.jpg"))
+            os.unlink(os.path.join(tempfile.gettempdir(), "lin_quad.jpg"))
+            os.unlink(os.path.join(tempfile.gettempdir(), "lwr_upr_reg.jpg"))
+        except:
+            text = "Email sending failed. Please check the email address!"
+
+        print(text)
+
+
 
 @click.command()
 @click.argument('xlsfilepath')
@@ -207,6 +258,7 @@ def main(xlsfilepath):
             obj.display()
             results.append([xlsfilepath.split("\\")[-1], obj.threshold, obj.timestamp, obj.slope])
             obj.plot()
+            obj.sendmail()
         except Exception as e:
             print("Error while processing data file: {}, error: {}. Please correct the file.".format(excelfile, e))
     else:
@@ -225,6 +277,8 @@ def main(xlsfilepath):
                 obj = GET()
                 obj.parse(excelfile)
                 obj.compute()
+                obj.plot()
+                obj.sendmail()
                 results.append([excelfile.split("\\")[-1], obj.threshold, obj.timestamp, obj.slope])
             except Exception as e:
                 print("Error while processing data file: {}, error: {}. Please correct the file.".format(excelfile, e))
