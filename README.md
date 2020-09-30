@@ -30,7 +30,7 @@ The CPET apparatus outputs measured values of time elapsed, breath-by-breath dat
 </div>
  
 ## Beaver and colleagues’ [1] method of determining the GET:
-Beaver and colleagues’ [1] called GET as Anaerobic threshold (AT), however, as mentioned earlier, we will refrain from using GET and AT interchangeably). They proposed that the GET can be determined by the following method:
+Beaver and colleagues’ [1] called GET as Anaerobic threshold (AT), however, as mentioned earlier, we will refrain from using GET and AT interchangeably. They proposed that the GET can be determined by the following method:
 Step 1: A tentative GET is chosen, and the data is divided into two regions. Each regions is fit with a separate linear regressions.
 
 <div align="center">
