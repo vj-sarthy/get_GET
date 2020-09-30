@@ -88,8 +88,8 @@ From the CPET software, the data is saved as 10 seconds averages in an excel fil
 In summary, the python program reduces the subjectivity involved in determining the GET by removing the need for an initial guess. It provides a faster way to analyse the data from a CPET to determine the GET point, and its timestamp by allowing multiple files (multiple participants) to be analysed parallelly.
 
 ## References:
-[1]	W. L. Beaver, K. Wasserman, and B. J. Whipp, “A new method for detecting anaerobic threshold by gas exchange,” J. Appl. Physiol., vol. 60, no. 6, pp. 2020–2027, 1986.
-[2]	S. E. Gaskill, B. C. Ruby, A. J. Walker, O. A. Sanchez, R. C. Serfass, and A. S. Leon, “Validity and reliability of combining three methods to determine ventilatory threshold,” Med. Sci. Sports Exerc., vol. 33, no. 11, pp. 1841–1848, 2001.
-[3]	J. Myers and E. Ashley, “Dangerous curves: A perspective on exercise, lactate, and the anaerobic threshold,” Chest, vol. 111, no. 3, pp. 787–795, 1997.
-[4]	R. K. Binder et al., “Methodological approach to the first and second lactate threshold in incremental cardiopulmonary exercise testing,” Eur. J. Prev. Cardiol., vol. 15, no. 6, pp. 726–734, 2008.
-[5]	A. Mezzani, “Cardiopulmonary exercise testing: Basics of methodology and measurements,” Ann. Am. Thorac. Soc., vol. 14, pp. S3–S11, 2017.
+1.	W. L. Beaver, K. Wasserman, and B. J. Whipp, “A new method for detecting anaerobic threshold by gas exchange,” J. Appl. Physiol., vol. 60, no. 6, pp. 2020–2027, 1986.
+2.	S. E. Gaskill, B. C. Ruby, A. J. Walker, O. A. Sanchez, R. C. Serfass, and A. S. Leon, “Validity and reliability of combining three methods to determine ventilatory threshold,” Med. Sci. Sports Exerc., vol. 33, no. 11, pp. 1841–1848, 2001.
+3.	J. Myers and E. Ashley, “Dangerous curves: A perspective on exercise, lactate, and the anaerobic threshold,” Chest, vol. 111, no. 3, pp. 787–795, 1997.
+4.	R. K. Binder et al., “Methodological approach to the first and second lactate threshold in incremental cardiopulmonary exercise testing,” Eur. J. Prev. Cardiol., vol. 15, no. 6, pp. 726–734, 2008.
+5.	A. Mezzani, “Cardiopulmonary exercise testing: Basics of methodology and measurements,” Ann. Am. Thorac. Soc., vol. 14, pp. S3–S11, 2017.
