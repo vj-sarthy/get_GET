@@ -60,9 +60,7 @@ import tempfile
 
 class GET(object):
     # window of data around threshold
-    threshold_x = 200
-    threshold_y = 400
-
+    
     def __init__(self):
         self.threshold = None
         self.timestamp = None
